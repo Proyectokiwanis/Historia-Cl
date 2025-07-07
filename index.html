@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica Pediátrica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 25px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "📋";
+            margin-right: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .table-section {
+            overflow-x: auto;
+        }
+
+        .clinical-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .clinical-table th,
+        .clinical-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .clinical-table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        .clinical-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .clinical-table input {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            background: transparent;
+        }
+
+        .clinical-table input:focus {
+            background: white;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+        }
+
+        .submit-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Historia Clínica Pediátrica</h1>
+            <p>Registro completo de evaluación médica</p>
+        </div>
+
+        <div class="form-container">
+            <form id="clinicalForm">
+                <!-- Datos Generales -->
+                <div class="section">
+                    <h2 class="section-title">Datos Generales</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">👤 Nombre</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="identificacion">🆔 Identificación</label>
+                            <input type="text" id="identificacion" name="identificacion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha_nacimiento">📅 Fecha de Nacimiento</label>
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="acudiente">👨‍👩‍👧‍👦 Acudiente</label>
+                            <input type="text" id="acudiente" name="acudiente">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">📞 Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="edad">🎂 Edad (Sep 2024)</label>
+                            <input type="number" id="edad" name="edad" min="0" max="18">
+                        </div>
+                        <div class="form-group">
+                            <label>⚧ Sexo</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="masculino" name="sexo" value="masculino">
+                                    <label for="masculino">Masculino</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="femenino" name="sexo" value="femenino">
+                                    <label for="femenino">Femenino</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="peso">⚖️ Peso (Kg)</label>
+                            <input type="number" id="peso" name="peso" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="talla">📏 Talla (Cm)</label>
+                            <input type="number" id="talla" name="talla" step="0.1" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Curvas de Desarrollo -->
+                <div class="section">
+                    <h2 class="section-title">Curvas de Desarrollo</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="peso_edad">📊 Peso para la Edad</label>
+                            <input type="text" id="peso_edad" name="peso_edad">
+                        </div>
+                        <div class="form-group">
+                            <label for="perimetro_cefalico">🧠 Perímetro Cefálico</label>
+                            <input type="number" id="perimetro_cefalico" name="perimetro_cefalico" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="peso_talla">📈 Peso para la Talla</label>
+                            <input type="text" id="peso_talla" name="peso_talla">
+                        </div>
+                        <div class="form-group">
+                            <label for="talla_edad">📏 Talla para la Edad</label>
+                            <input type="text" id="talla_edad" name="talla_edad">
+                        </div>
+                        <div class="form-group">
+                            <label for="imc_edad">🏃 IMC para la Edad</label>
+                            <input type="text" id="imc_edad" name="imc_edad">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signos Vitales -->
+                <div class="section">
+                    <h2 class="section-title">Signos Vitales</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="temperatura">🌡️ Temperatura (°C)</label>
+                            <input type="number" id="temperatura" name="temperatura" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="fr">🫁 FR (respiraciones/min)</label>
+                            <input type="number" id="fr" name="fr">
+                        </div>
+                        <div class="form-group">
+                            <label for="fc">❤️ FC (latidos/min)</label>
+                            <input type="number" id="fc" name="fc">
+                        </div>
+                        <div class="form-group">
+                            <label for="ta">🩸 TA (mmHg)</label>
+                            <input type="text" id="ta" name="ta" placeholder="120/80">
+                        </div>
+                        <div class="form-group">
+                            <label for="sao2">🫁 SaO2 (%)</label>
+                            <input type="number" id="sao2" name="sao2" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="dolor">😣 Dolor (escala 1-10)</label>
+                            <input type="number" id="dolor" name="dolor" min="0" max="10">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Antecedentes -->
+                <div class="section">
+                    <h2 class="section-title">Antecedentes</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="farmacologicos">💊 Farmacológicos</label>
+                            <textarea id="farmacologicos" name="farmacologicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="quirurgicos">🏥 Quirúrgicos</label>
+                            <textarea id="quirurgicos" name="quirurgicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="alergicos">🤧 Alérgicos</label>
+                            <textarea id="alergicos" name="alergicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="familiares">👨‍👩‍👧‍👦 Familiares</label>
+                            <textarea id="familiares" name="familiares"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="patologicos">🦠 Patológicos</label>
+                            <textarea id="patologicos" name="patologicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="ginecologicos">🩺 Ginecológicos</label>
+                            <textarea id="ginecologicos" name="ginecologicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="motivo_consulta">🏥 Motivo de Consulta</label>
+                            <textarea id="motivo_consulta" name="motivo_consulta"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="dx_medicos">⚕️ Dx Médicos</label>
+                            <textarea id="dx_medicos" name="dx_medicos"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Complementaria del Tratamiento -->
+                <div class="section">
+                    <h2 class="section-title">Información Complementaria del Tratamiento</h2>
+                    <div class="form-group">
+                        <label for="tratamiento_farmacologico">💊 Tratamiento Farmacológico</label>
+                        <textarea id="tratamiento_farmacologico" name="tratamiento_farmacologico"></textarea>
+                    </div>
+                    
+                    <div class="table-section">
+                        <h3>Medicamentos</h3>
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Dosis</th>
+                                    <th>Horario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" name="medicamento_1"></td>
+                                    <td><input type="text" name="dosis_1"></td>
+                                    <td><input type="text" name="horario_1"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="medicamento_2"></td>
+                                    <td><input type="text" name="dosis_2"></td>
+                                    <td><input type="text" name="horario_2"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="medicamento_3"></td>
+                                    <td><input type="text" name="dosis_3"></td>
+                                    <td><input type="text" name="horario_3"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Ayudas Diagnósticas</h3>
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Ayuda Dx</th>
+                                    <th>Fecha</th>
+                                    <th>Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" name="ayuda_dx_1"></td>
+                                    <td><input type="date" name="fecha_dx_1"></td>
+                                    <td><input type="text" name="resultado_dx_1"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="ayuda_dx_2"></td>
+                                    <td><input type="date" name="fecha_dx_2"></td>
+                                    <td><input type="text" name="resultado_dx_2"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="ayuda_dx_3"></td>
+                                    <td><input type="date" name="fecha_dx_3"></td>
+                                    <td><input type="text" name="resultado_dx_3"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Valoración Física por Sistemas -->
+                <div class="section">
+                    <h2 class="section-title">Valoración Física por Sistemas</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="neurologico">🧠 Neurológico</label>
+                            <textarea id="neurologico" name="neurologico"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardiovascular">❤️ Cardiovascular</label>
+                            <textarea id="cardiovascular" name="cardiovascular"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="respiratorio">🫁 Respiratorio</label>
+                            <textarea id="respiratorio" name="respiratorio"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="metabolico">⚡ Metabólico</label>
+                            <textarea id="metabolico" name="metabolico"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="gastrointestinal">🍽️ Gastrointestinal</label>
+                            <textarea id="gastrointestinal" name="gastrointestinal"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="genitourinario">🩺 Genitourinario</label>
+                            <textarea id="genitourinario" name="genitourinario"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="piel_extremidades">✋ Piel y Extremidades</label>
+                            <textarea id="piel_extremidades" name="piel_extremidades"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dinámica Familiar y Social -->
+                <div class="section">
+                    <h2 class="section-title">Dinámica Familiar y Social</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="apgar_familiar">👨‍👩‍👧‍👦 Puntaje APGAR Familiar</label>
+                            <input type="number" id="apgar_familiar" name="apgar_familiar" min="0" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="comentarios_familia">💬 Comentarios</label>
+                            <textarea id="comentarios_familia" name="comentarios_familia"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Escala Abreviada del Desarrollo -->
+                <div class="section">
+                    <h2 class="section-title">Escala Abreviada del Desarrollo</h2>
+                    <div class="table-section">
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>ÁREA</th>
+                                    <th>PD</th>
+                                    <th>PT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Motricidad Gruesa</td>
+                                    <td><input type="number" name="pd_motricidad_gruesa"></td>
+                                    <td><input type="number" name="pt_motricidad_gruesa"></td>
+                                </tr>
+                                <tr>
+                                    <td>Motricidad Fina</td>
+                                    <td><input type="number" name="pd_motricidad_fina"></td>
+                                    <td><input type="number" name="pt_motricidad_fina"></td>
+                                </tr>
+                                <tr>
+                                    <td>Audición y Lenguaje</td>
+                                    <td><input type="number" name="pd_audicion_lenguaje"></td>
+                                    <td><input type="number" name="pt_audicion_lenguaje"></td>
+                                </tr>
+                                <tr>
+                                    <td>Personal Social</td>
+                                    <td><input type="number" name="pd_personal_social"></td>
+                                    <td><input type="number" name="pt_personal_social"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Priorización de Situaciones -->
+                <div class="section">
+                    <h2 class="section-title">Priorización de Situaciones Según Dominios de Enfermería</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fisiologico">🫀 Fisiológico</label>
+                            <textarea id="fisiologico" name="fisiologico"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="mental_emocional">🧠 Mental/Emocional</label>
+                            <textarea id="mental_emocional" name="mental_emocional"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="espiritual">🙏 Espiritual</label>
+                            <textarea id="espiritual" name="espiritual"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="social_familiar">👨‍👩‍👧‍👦 Social/Familiar</label>
+                            <textarea id="social_familiar" name="social_familiar"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="crecimiento_desarrollo">📈 Crecimiento y Desarrollo</label>
+                            <textarea id="crecimiento_desarrollo" name="crecimiento_desarrollo"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan de Cuidado de Enfermería -->
+                <div class="section">
+                    <h2 class="section-title">Plan de Cuidado de Enfermería</h2>
+                    <div class="table-section">
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>Diagnóstico</th>
+                                    <th>NOC</th>
+                                    <th>NIC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><textarea name="diagnostico_1" rows="3"></textarea></td>
+                                    <td><textarea name="noc_1" rows="3"></textarea></td>
+                                    <td><textarea name="nic_1" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><textarea name="diagnostico_2" rows="3"></textarea></td>
+                                    <td><textarea name="noc_2" rows="3"></textarea></td>
+                                    <td><textarea name="nic_2" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><textarea name="diagnostico_3" rows="3"></textarea></td>
+                                    <td><textarea name="noc_3" rows="3"></textarea></td>
+                                    <td><textarea name="nic_3" rows="3"></textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        💾 Guardar Historia Clínica
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-database-compat.min.js"></script>
+    
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "hckiwanis.firebaseapp.com",
+            databaseURL: "https://hckiwanis-default-rtdb.firebaseio.com",
+            projectId: "hckiwanis",
+            storageBucket: "hckiwanis.appspot.com",
+            messagingSenderId: "TU_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Función para guardar en Firebase
+        function guardarHistoriaClinica(datos) {
+            // Crear una referencia única para cada historia clínica
+            const historiaRef = database.ref('historias_clinicas').push();
+            
+            return historiaRef.set({
+                ...datos,
+                fecha_creacion: firebase.database.ServerValue.TIMESTAMP,
+                id: historiaRef.key
+            });
+        }
+
+        // Función para recopilar datos del formulario
+        function recopilarDatosFormulario() {
+            const form = document.getElementById('clinicalForm');
+            const formData = new FormData(form);
+            const datos = {};
+
+            // Recopilar datos básicos
+            for (let [key, value] of formData.entries()) {
+                datos[key] = value;
+            }
+
+            // Agrupar medicamentos
+            datos.medicamentos = [];
+            for (let i = 1; i <= 3; i++) {
+                const medicamento = datos[`medicamento_${i}`];
+                const dosis = datos[`dosis_${i}`];
+                const horario = datos[`horario_${i}`];
+                
+                if (medicamento || dosis || horario) {
+                    datos.medicamentos.push({
+                        medicamento: medicamento || '',
+                        dosis: dosis || '',
+                        horario: horario || ''
+                    });
+                }
+                
+                // Limpiar campos individuales
+                delete datos[`medicamento_${i}`];
+                delete datos[`dosis_${i}`];
+                delete datos[`horario_${i}`];
+            }
+
+            // Agrupar ayudas diagnósticas
+            datos.ayudas_diagnosticas = [];
+            for (let i = 1; i <= 3; i++) {
+                const tipo = datos[`ayuda_dx_${i}`];
+                const fecha = datos[`fecha_dx_${i}`];
+                const resultado = datos[`resultado_dx_${i}`];
+                
+                if (tipo || fecha || resultado) {
+                    datos.ayudas_diagnosticas.push({
+                        tipo: tipo || '',
+                        fecha: fecha || '',
+                        resultado: resultado || ''
+                    });
+                }
+                
+                // Limpiar campos individuales
+                delete datos[`ayuda_dx_${i}`];
+                delete datos[`fecha_dx_${i}`];
+                delete datos[`resultado_dx_${i}`];
+            }
+
+            // Agrupar escalas de desarrollo
+            datos.escala_desarrollo = {
+                motricidad_gruesa: {
+                    pd: datos.pd_motricidad_gruesa || '',
+                    pt: datos.pt_motricidad_gruesa || ''
+                },
+                motricidad_fina: {
+                    pd: datos.pd_motricidad_fina || '',
+                    pt: datos.pt_motricidad_fina || ''
+                },
+                audicion_lenguaje: {
+                    pd: datos.pd_audicion_lenguaje || '',
+                    pt: datos.pt_audicion_lenguaje || ''
+                },
+                personal_social: {
+                    pd: datos.pd_personal_social || '',
+                    pt: datos.pt_personal_social || ''
+                }
+            };
+
+            // Limpiar campos individuales de desarrollo
+            ['pd_motricidad_gruesa', 'pt_motricidad_gruesa', 'pd_motricidad_fina', 'pt_motricidad_fina',
+             'pd_audicion_lenguaje', 'pt_audicion_lenguaje', 'pd_personal_social', 'pt_personal_social'].forEach(field => {
+                delete datos[field];
+            });
+
+            // Agrupar plan de cuidado
+            datos.plan_cuidado = [];
+            for (let i = 1; i <= 3; i++) {
+                const diagnostico = datos[`diagnostico_${i}`];
+                const noc = datos[`noc_${i}`];
+                const nic = datos[`nic_${i}`];
+                
+                if (diagnostico || noc || nic) {
+                    datos.plan_cuidado.push({
+                        diagnostico: diagnostico || '',
+                        noc: noc || '',
+                        nic: nic || ''
+                    });
+                }
+                
+                // Limpiar campos individuales
+                delete datos[`diagnostico_${i}`];
+                delete datos[`noc_${i}`];
+                delete datos[`nic_${i}`];
+            }
+
+            return datos;
+        }
+
+        document.getElementById('clinicalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = '⏳ Guardando en Firebase...';
+            submitBtn.disabled = true;
+            
+            // Recopilar datos del formulario
+            const datosFormulario = recopilarDatosFormulario();
+            
+            // Guardar en Firebase
+            guardarHistoriaClinica(datosFormulario)
+                .then(() => {
+                    submitBtn.textContent = '✅ Guardado en Firebase';
+                    submitBtn.style.background = '#4CAF50';
+                    submitBtn.style.color = 'white';
+                    
+                    // Mostrar mensaje de éxito
+                    alert('✅ Historia clínica guardada exitosamente en Firebase');
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'white';
+                        submitBtn.style.color = '#667eea';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    console.error('Error al guardar:', error);
+                    submitBtn.textContent = '❌ Error al guardar';
+                    submitBtn.style.background = '#f44336';
+                    submitBtn.style.color = 'white';
+                    
+                    // Mostrar mensaje de error
+                    alert('❌ Error al guardar en Firebase: ' + error.message);
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'white';
+                        submitBtn.style.color = '#667eea';
+                    }, 3000);
+                });
+        });
+
+        // Función para cargar una historia clínica existente
+        function cargarHistoriaClinica(id) {
+            const historiaRef = database.ref('historias_clinicas/' + id);
+            
+            return historiaRef.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    const datos = snapshot.val();
+                    // Aquí puedes llenar el formulario con los datos cargados
+                    console.log('Historia clínica cargada:', datos);
+                    return datos;
+                } else {
+                    throw new Error('Historia clínica no encontrada');
+                }
+            });
+        }
+
+        // Función para listar todas las historias clínicas
+        function listarHistoriasClinicas() {
+            const historiasRef = database.ref('historias_clinicas');
+            
+            return historiasRef.once('value').then((snapshot) => {
+                const historias = [];
+                snapshot.forEach((childSnapshot) => {
+                    const historia = childSnapshot.val();
+                    historias.push({
+                        id: childSnapshot.key,
+                        ...historia
+                    });
+                });
+                return historias;
+            });
+        }
+
+        // Cálculo automático de edad
+        document.getElementById('fecha_nacimiento').addEventListener('change', function() {
+            const fechaNacimiento = new Date(this.value);
+            const fechaReferencia = new Date('2024-09-01');
+            const edad = Math.floor((fechaReferencia - fechaNacimiento) / (365.25 * 24 * 60 * 60 * 1000));
+            
+            if (edad >= 0 && edad <= 18) {
+                document.getElementById('edad').value = edad;
+            }
+        });
+
+        // Cálculo automático de IMC
+        function calcularIMC() {
+            const peso = parseFloat(document.getElementById('peso').value);
+            const talla = parseFloat(document.getElementById('talla').value);
+            
+            if (peso && talla) {
+                const imc = peso / Math.pow(talla / 100, 2);
+                document.getElementById('imc_edad').value = imc.toFixed(1);
+            }
+        }
+
+        document.getElementById('peso').addEventListener('input', calcularIMC);
+        document.getElementById('talla').addEventListener('input', calcularIMC);
+    </script>
+</body>
+</html>
