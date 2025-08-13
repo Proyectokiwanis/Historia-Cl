@@ -1,0 +1,1534 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica Pediátrica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 25px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "📋";
+            margin-right: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .table-section {
+            overflow-x: auto;
+        }
+
+        .clinical-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .clinical-table th,
+        .clinical-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .clinical-table th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        .clinical-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .clinical-table input {
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            background: transparent;
+        }
+
+        .clinical-table input:focus {
+            background: white;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+        }
+
+        .submit-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .apgar-questions {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .apgar-question {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .radio-option input[type="radio"] {
+            margin-right: 5px;
+        }
+        
+        .puntaje-resultado {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .puntaje-numero {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .interpretacion {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .normal { background-color: #d4edda; color: #155724; }
+        .disfuncion-leve { background-color: #fff3cd; color: #856404; }
+        .disfuncion-moderada { background-color: #f8d7da; color: #721c24; }
+        .disfuncion-severa { background-color: #f5c6cb; color: #721c24; }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        /* CSS para Dominios de Enfermería - Ajustado al estilo existente */
+        .dominios-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .dominio-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .dominio-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .dominio-titulo {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .radio-option:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .radio-option input[type="radio"] {
+            margin: 0;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        
+        .radio-option label {
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1em;
+        }
+        
+        .normal-radio {
+            color: #28a745;
+        }
+        
+        .normal-radio:hover {
+            background-color: #e8f5e8;
+        }
+        
+        .alterado-radio {
+            color: #dc3545;
+        }
+        
+        .alterado-radio:hover {
+            background-color: #fde8e8;
+        }
+        
+        .alteracion-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            min-height: 100px;
+            resize: vertical;
+            background-color: #fff5f5;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            display: none;
+            font-size: 1em;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .alteracion-textarea.mostrar {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .alteracion-textarea:focus {
+            outline: none;
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+            background-color: white;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                margin-top: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 150px;
+                margin-top: 10px;
+            }
+        }
+        
+        .contador-alterados {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .contador-alterados:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .dominios-grid {
+                gap: 15px;
+            }
+            
+            .dominio-item {
+                padding: 15px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .radio-option {
+                justify-content: flex-start;
+            }
+            
+            .dominio-titulo {
+                font-size: 1.1em;
+            }
+            
+            .contador-alterados {
+                padding: 15px;
+                font-size: 1em;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Historia Clínica Pediátrica</h1>
+            <p>Registro completo de evaluación médica</p>
+        </div>
+
+        <div class="form-container">
+            <form id="clinicalForm">
+                <!-- Datos Generales -->
+                <div class="section">
+                    <h2 class="section-title">Datos Generales</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">👤 Nombre</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="identificacion">🆔 Identificación</label>
+                            <input type="text" id="identificacion" name="identificacion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha_nacimiento">📅 Fecha de Nacimiento</label>
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="acudiente">👨‍👩‍👧‍👦 Acudiente</label>
+                            <input type="text" id="acudiente" name="acudiente">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">📞 Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="edad">🎂 Edad (Sep 2024)</label>
+                            <input type="number" id="edad" name="edad" min="0" max="18">
+                        </div>
+                        <div class="form-group">
+                            <label>⚧ Sexo</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="masculino" name="sexo" value="masculino">
+                                    <label for="masculino">Masculino</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="femenino" name="sexo" value="femenino">
+                                    <label for="femenino">Femenino</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="peso">⚖️ Peso (Kg)</label>
+                            <input type="number" id="peso" name="peso" step="0.1" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="talla">📏 Talla (Cm)</label>
+                            <input type="number" id="talla" name="talla" step="0.1" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Curvas de Desarrollo -->
+                <div class="section">
+                    <h2 class="section-title">Curvas de Desarrollo</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="peso_edad">📊 Peso para la Edad</label>
+                            <input type="text" id="peso_edad" name="peso_edad">
+                        </div>
+                        <div class="form-group">
+                            <label for="perimetro_cefalico">💪 Perímetro Braquial</label>
+                            <input type="number" id="perimetro_cefalico" name="perimetro_cefalico" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="peso_talla">📈 Peso para la Talla</label>
+                            <input type="text" id="peso_talla" name="peso_talla">
+                        </div>
+                        <div class="form-group">
+                            <label for="talla_edad">📏 Talla para la Edad</label>
+                            <input type="text" id="talla_edad" name="talla_edad">
+                        </div>
+                        <div class="form-group">
+                            <label for="imc_edad">🏃 IMC para la Edad</label>
+                            <input type="text" id="imc_edad" name="imc_edad">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signos Vitales -->
+                <div class="section">
+                    <h2 class="section-title">Signos Vitales</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="temperatura">🌡️ Temperatura (°C)</label>
+                            <input type="number" id="temperatura" name="temperatura" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="fr">🫁 FR (respiraciones/min)</label>
+                            <input type="number" id="fr" name="fr">
+                        </div>
+                        <div class="form-group">
+                            <label for="fc">❤️ FC (latidos/min)</label>
+                            <input type="number" id="fc" name="fc">
+                        </div>
+                        <div class="form-group">
+                            <label for="ta">🩸 TA (mmHg)</label>
+                            <input type="text" id="ta" name="ta" placeholder="120/80">
+                        </div>
+                        <div class="form-group">
+                            <label for="sao2">🫁 SaO2 (%)</label>
+                            <input type="number" id="sao2" name="sao2" min="0" max="100">
+                        </div>
+                      </div>
+                </div>
+
+                <!-- Antecedentes -->
+                <div class="section">
+                    <h2 class="section-title">Antecedentes</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="farmacologicos">💊 Farmacológicos</label>
+                            <textarea id="farmacologicos" name="farmacologicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="quirurgicos">🏥 Quirúrgicos</label>
+                            <textarea id="quirurgicos" name="quirurgicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="alergicos">🤧 Alérgicos</label>
+                            <textarea id="alergicos" name="alergicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="familiares">👨‍👩‍👧‍👦 Familiares</label>
+                            <textarea id="familiares" name="familiares"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="patologicos">🦠 Patológicos</label>
+                            <textarea id="patologicos" name="patologicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="ginecologicos">🩺 Ginecológicos</label>
+                            <textarea id="ginecologicos" name="ginecologicos"></textarea>
+                        </div>
+                        <div class="form-group">
+                              <label for="esquema_vacunacion">🏥 Esquema de vacunación </label>
+                              <textarea id="esquema_vacunacion" name="esquema_vacunacion"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="salud_oral">🦷 Salud Oral </label>
+                            <textarea id="salud_oral" name="salud_oral"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="dx_medicos">⚕️ Dx Médicos</label>
+                            <textarea id="dx_medicos" name="dx_medicos"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valoración -->
+                <div class="section">
+                    <h2 class="section-title">Valoración Física </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="neurologico">🧠 Neurológico</label>
+                            <textarea id="neurologico" name="neurologico"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardiovascular">❤️ Cardiovascular</label>
+                            <textarea id="cardiovascular" name="cardiovascular"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="respiratorio">🫁 Respiratorio</label>
+                            <textarea id="respiratorio" name="respiratorio"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="metabolico">⚡ Metabólico</label>
+                            <textarea id="metabolico" name="metabolico"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="gastrointestinal">🍽️ Gastrointestinal</label>
+                            <textarea id="gastrointestinal" name="gastrointestinal"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="genitourinario">🩺 Genitourinario</label>
+                            <textarea id="genitourinario" name="genitourinario"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="piel_extremidades">✋ Piel y Extremidades</label>
+                            <textarea id="piel_extremidades" name="piel_extremidades"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dinámica Familiar y Social -->
+                <div class="section">
+                    <h2 class="section-title">👨‍👩‍👧‍👦 Dinámica Familiar y Social - APGAR Familiar</h2>
+                    
+                    <div class="apgar-questions">
+                        <!-- Pregunta 1: Adaptación -->
+                        <div class="apgar-question">
+                            <div class="question-text">
+                                1. ¿Está usted satisfecho con la ayuda que recibe de su familia cuando tiene algún problema?
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="adaptacion_0" name="adaptacion" value="0">
+                                    <label for="adaptacion_0">Nunca (0)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="adaptacion_1" name="adaptacion" value="1">
+                                    <label for="adaptacion_1">Casi nunca (1)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="adaptacion_2" name="adaptacion" value="2">
+                                    <label for="adaptacion_2">Siempre (2)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 2: Participación -->
+                        <div class="apgar-question">
+                            <div class="question-text">
+                                2. ¿Está usted satisfecho con la forma como su familia discute asuntos de interés común y comparte la solución del problema con usted?
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="participacion_0" name="participacion" value="0">
+                                    <label for="participacion_0">Nunca (0)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="participacion_1" name="participacion" value="1">
+                                    <label for="participacion_1">Casi nunca (1)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="participacion_2" name="participacion" value="2">
+                                    <label for="participacion_2">Siempre (2)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 3: Crecimiento -->
+                        <div class="apgar-question">
+                            <div class="question-text">
+                                3. ¿Su familia acepta sus deseos de emprender nuevas actividades o hacer cambios en su estilo de vida?
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="crecimiento_0" name="crecimiento" value="0">
+                                    <label for="crecimiento_0">Nunca (0)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="crecimiento_1" name="crecimiento" value="1">
+                                    <label for="crecimiento_1">Casi nunca (1)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="crecimiento_2" name="crecimiento" value="2">
+                                    <label for="crecimiento_2">Siempre (2)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 4: Afecto -->
+                        <div class="apgar-question">
+                            <div class="question-text">
+                                4. ¿Está usted satisfecho con la forma como su familia expresa afecto y responde a sus sentimientos como rabia, tristeza o amor?
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="afecto_0" name="afecto" value="0">
+                                    <label for="afecto_0">Nunca (0)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="afecto_1" name="afecto" value="1">
+                                    <label for="afecto_1">Casi nunca (1)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="afecto_2" name="afecto" value="2">
+                                    <label for="afecto_2">Siempre (2)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 5: Resolución -->
+                        <div class="apgar-question">
+                            <div class="question-text">
+                                5. ¿Está usted satisfecho con la cantidad de tiempo que su familia y usted comparten juntos?
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="resolucion_0" name="resolucion" value="0">
+                                    <label for="resolucion_0">Nunca (0)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="resolucion_1" name="resolucion" value="1">
+                                    <label for="resolucion_1">Casi nunca (1)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="resolucion_2" name="resolucion" value="2">
+                                    <label for="resolucion_2">Siempre (2)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resultado del APGAR -->
+                    <div class="puntaje-resultado">
+                        <h3>Puntaje APGAR Familiar</h3>
+                        <div class="puntaje-numero" id="puntaje_total">0</div>
+                        <div>de 10 puntos</div>
+                        <div class="interpretacion" id="interpretacion">
+                            Seleccione las respuestas para obtener el resultado
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apgar_familiar_calculado">🔢 Puntaje APGAR Familiar (Calculado automáticamente)</label>
+                        <input type="number" id="apgar_familiar_calculado" name="apgar_familiar" min="0" max="10" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentarios_familia">💬 Comentarios sobre la dinámica familiar</label>
+                        <textarea id="comentarios_familia" name="comentarios_familia" placeholder="Observaciones adicionales sobre la funcionalidad familiar..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Escala Abreviada del Desarrollo -->
+                <div class="section">
+                    <h2 class="section-title">Escala Abreviada del Desarrollo</h2>
+                    <div class="table-section">
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>ÁREA</th>
+                                    <th>PD</th>
+                                    <th>PT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Motricidad Gruesa</td>
+                                    <td><input type="number" name="pd_motricidad_gruesa"></td>
+                                    <td><input type="number" name="pt_motricidad_gruesa"></td>
+                                </tr>
+                                <tr>
+                                    <td>Motricidad Fina</td>
+                                    <td><input type="number" name="pd_motricidad_fina"></td>
+                                    <td><input type="number" name="pt_motricidad_fina"></td>
+                                </tr>
+                                <tr>
+                                    <td>Audición y Lenguaje</td>
+                                    <td><input type="number" name="pd_audicion_lenguaje"></td>
+                                    <td><input type="number" name="pt_audicion_lenguaje"></td>
+                                </tr>
+                                <tr>
+                                    <td>Personal Social</td>
+                                    <td><input type="number" name="pd_personal_social"></td>
+                                    <td><input type="number" name="pt_personal_social"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Priorización de Situaciones según Dominios de Enfermería -->
+                <div class="section">
+                    <h2 class="section-title">🩺 Priorización de Situaciones Según Dominios de Enfermería NANDA</h2>
+                    
+                    <div class="contador-alterados">
+                        <span id="contador-dominios">0 de 13 dominios alterados</span>
+                    </div>
+                    
+                    <div class="dominios-grid">
+                        <!-- Dominio 1: Promoción de la Salud -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                🌟 Dominio 1: Promoción de la Salud
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="promocion_normal" name="promocion_salud" value="normal">
+                                    <label for="promocion_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="promocion_alterado" name="promocion_salud" value="alterado">
+                                    <label for="promocion_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="promocion_alteracion" name="promocion_salud_alteracion" placeholder="Describa la alteración en promoción de la salud..."></textarea>
+                        </div>
+
+                        <!-- Dominio 2: Nutrición -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                🍏 Dominio 2: Nutrición
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="nutricion_normal" name="nutricion" value="normal">
+                                    <label for="nutricion_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="nutricion_alterado" name="nutricion" value="alterado">
+                                    <label for="nutricion_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="nutricion_alteracion" name="nutricion_alteracion" placeholder="Describa la alteración nutricional..."></textarea>
+                        </div>
+
+                        <!-- Dominio 3: Eliminación e Intercambio -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                🚽 Dominio 3: Eliminación e Intercambio
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="eliminacion_normal" name="eliminacion" value="normal">
+                                    <label for="eliminacion_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="eliminacion_alterado" name="eliminacion" value="alterado">
+                                    <label for="eliminacion_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="eliminacion_alteracion" name="eliminacion_alteracion" placeholder="Describa la alteración en eliminación e intercambio..."></textarea>
+                        </div>
+
+                        <!-- Dominio 4: Actividad/Reposo -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                💤 Dominio 4: Actividad/Reposo
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="actividad_normal" name="actividad_reposo" value="normal">
+                                    <label for="actividad_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="actividad_alterado" name="actividad_reposo" value="alterado">
+                                    <label for="actividad_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="actividad_alteracion" name="actividad_reposo_alteracion" placeholder="Describa la alteración en actividad/reposo..."></textarea>
+                        </div>
+
+                        <!-- Dominio 5: Percepción/Cognición -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                🧠 Dominio 5: Percepción/Cognición
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="percepcion_normal" name="percepcion_cognicion" value="normal">
+                                    <label for="percepcion_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="percepcion_alterado" name="percepcion_cognicion" value="alterado">
+                                    <label for="percepcion_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="percepcion_alteracion" name="percepcion_cognicion_alteracion" placeholder="Describa la alteración en percepción/cognición..."></textarea>
+                        </div>
+
+                        <!-- Dominio 6: Autopercepción -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                🪞 Dominio 6: Autopercepción
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="autopercepcion_normal" name="autopercepcion" value="normal">
+                                    <label for="autopercepcion_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="autopercepcion_alterado" name="autopercepcion" value="alterado">
+                                    <label for="autopercepcion_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="autopercepcion_alteracion" name="autopercepcion_alteracion" placeholder="Describa la alteración en autopercepción..."></textarea>
+                        </div>
+
+                        <!-- Dominio 7: Rol/Relaciones -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                👥 Dominio 7: Rol/Relaciones
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="rol_normal" name="rol_relaciones" value="normal">
+                                    <label for="rol_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="rol_alterado" name="rol_relaciones" value="alterado">
+                                    <label for="rol_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="rol_alteracion" name="rol_relaciones_alteracion" placeholder="Describa la alteración en rol/relaciones..."></textarea>
+                        </div>
+
+                        <!-- Dominio 8: Sexualidad -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                💕 Dominio 8: Sexualidad
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="sexualidad_normal" name="sexualidad" value="normal">
+                                    <label for="sexualidad_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="sexualidad_alterado" name="sexualidad" value="alterado">
+                                    <label for="sexualidad_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="sexualidad_alteracion" name="sexualidad_alteracion" placeholder="Describa la alteración en sexualidad..."></textarea>
+                        </div>
+
+                        <!-- Dominio 9: Afrontamiento/Tolerancia al Estrés -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                😰 Dominio 9: Afrontamiento/Tolerancia al Estrés
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="afrontamiento_normal" name="afrontamiento_estres" value="normal">
+                                    <label for="afrontamiento_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="afrontamiento_alterado" name="afrontamiento_estres" value="alterado">
+                                    <label for="afrontamiento_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="afrontamiento_alteracion" name="afrontamiento_estres_alteracion" placeholder="Describa la alteración en afrontamiento/tolerancia al estrés..."></textarea>
+                        </div>
+
+                        <!-- Dominio 10: Principios Vitales -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                ⚖️ Dominio 10: Principios Vitales
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="principios_normal" name="principios_vitales" value="normal">
+                                    <label for="principios_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="principios_alterado" name="principios_vitales" value="alterado">
+                                    <label for="principios_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="principios_alteracion" name="principios_vitales_alteracion" placeholder="Describa la alteración en principios vitales..."></textarea>
+                        </div>
+
+                        <!-- Dominio 11: Seguridad/Protección -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                🛡️ Dominio 11: Seguridad/Protección
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="seguridad_normal" name="seguridad_proteccion" value="normal">
+                                    <label for="seguridad_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="seguridad_alterado" name="seguridad_proteccion" value="alterado">
+                                    <label for="seguridad_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="seguridad_alteracion" name="seguridad_proteccion_alteracion" placeholder="Describa la alteración en seguridad/protección..."></textarea>
+                        </div>
+
+                        <!-- Dominio 12: Confort -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                😌 Dominio 12: Confort
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="confort_normal" name="confort" value="normal">
+                                    <label for="confort_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="confort_alterado" name="confort" value="alterado">
+                                    <label for="confort_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="confort_alteracion" name="confort_alteracion" placeholder="Describa la alteración en confort..."></textarea>
+                        </div>
+
+                        <!-- Dominio 13: Crecimiento/Desarrollo -->
+                        <div class="dominio-item">
+                            <div class="dominio-titulo">
+                                📈 Dominio 13: Crecimiento/Desarrollo
+                            </div>
+                            <div class="radio-group">
+                                <div class="radio-option normal-radio">
+                                    <input type="radio" id="crecimiento_normal" name="crecimiento_desarrollo" value="normal">
+                                    <label for="crecimiento_normal">✅ Normal</label>
+                                </div>
+                                <div class="radio-option alterado-radio">
+                                    <input type="radio" id="crecimiento_alterado" name="crecimiento_desarrollo" value="alterado">
+                                    <label for="crecimiento_alterado">❌ Alterado</label>
+                                </div>
+                            </div>
+                            <textarea class="alteracion-textarea" id="crecimiento_alteracion" name="crecimiento_desarrollo_alteracion" placeholder="Describa la alteración en crecimiento/desarrollo..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan de Cuidado de Enfermería -->
+                <div class="section">
+                    <h2 class="section-title">Plan de Cuidado de Enfermería</h2>
+                    <div class="table-section">
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>Diagnóstico</th>
+                                    <th>NOC</th>
+                                    <th>NIC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><textarea name="diagnostico_1" rows="3"></textarea></td>
+                                    <td><textarea name="noc_1" rows="3"></textarea></td>
+                                    <td><textarea name="nic_1" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><textarea name="diagnostico_2" rows="3"></textarea></td>
+                                    <td><textarea name="noc_2" rows="3"></textarea></td>
+                                    <td><textarea name="nic_2" rows="3"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><textarea name="diagnostico_3" rows="3"></textarea></td>
+                                    <td><textarea name="noc_3" rows="3"></textarea></td>
+                                    <td><textarea name="nic_3" rows="3"></textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        💾 Guardar Historia Clínica
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.1/firebase-database-compat.min.js"></script>
+    
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "tu-clave-api-real",
+            authDomain: "hckiwanis.firebaseapp.com",
+            databaseURL: "https://hckiwanis-default-rtdb.firebaseio.com",
+            projectId: "hckiwanis",
+            storageBucket: "hckiwanis.appspot.com",
+            messagingSenderId: "tu-sender-id-real",
+            appId: "tu-app-id-real"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Función para guardar en Firebase
+        function guardarHistoriaClinica(datos) {
+            const historiaRef = database.ref('historias_clinicas').push();
+            
+            return historiaRef.set({
+                ...datos,
+                fecha_creacion: firebase.database.ServerValue.TIMESTAMP,
+                id: historiaRef.key
+            });
+        }
+
+        // Función para recopilar datos del formulario
+        function recopilarDatosFormulario() {
+            const form = document.getElementById('clinicalForm');
+            const formData = new FormData(form);
+            const datos = {};
+
+            // Recopilar datos básicos
+            for (let [key, value] of formData.entries()) {
+                datos[key] = value;
+            }
+
+            // Agrupar escalas de desarrollo
+            datos.escala_desarrollo = {
+                motricidad_gruesa: {
+                    pd: datos.pd_motricidad_gruesa || '',
+                    pt: datos.pt_motricidad_gruesa || ''
+                },
+                motricidad_fina: {
+                    pd: datos.pd_motricidad_fina || '',
+                    pt: datos.pt_motricidad_fina || ''
+                },
+                audicion_lenguaje: {
+                    pd: datos.pd_audicion_lenguaje || '',
+                    pt: datos.pt_audicion_lenguaje || ''
+                },
+                personal_social: {
+                    pd: datos.pd_personal_social || '',
+                    pt: datos.pt_personal_social || ''
+                }
+            };
+
+            // Limpiar campos individuales de desarrollo
+            ['pd_motricidad_gruesa', 'pt_motricidad_gruesa', 'pd_motricidad_fina', 'pt_motricidad_fina',
+             'pd_audicion_lenguaje', 'pt_audicion_lenguaje', 'pd_personal_social', 'pt_personal_social'].forEach(field => {
+                delete datos[field];
+            });
+
+            // Agrupar plan de cuidado
+            datos.plan_cuidado = [];
+            for (let i = 1; i <= 3; i++) {
+                const diagnostico = datos[`diagnostico_${i}`];
+                const noc = datos[`noc_${i}`];
+                const nic = datos[`nic_${i}`];
+                
+                if (diagnostico || noc || nic) {
+                    datos.plan_cuidado.push({
+                        diagnostico: diagnostico || '',
+                        noc: noc || '',
+                        nic: nic || ''
+                    });
+                }
+                
+                // Limpiar campos individuales
+                delete datos[`diagnostico_${i}`];
+                delete datos[`noc_${i}`];
+                delete datos[`nic_${i}`];
+            }
+
+            // Incluir datos del APGAR Familiar
+            const apgarData = obtenerResultadoAPGAR();
+            datos.apgar_familiar = apgarData;
+            
+            // Incluir datos de dominios de enfermería
+            const dominiosData = obtenerDatosDominios();
+            datos.dominios_enfermeria = dominiosData;
+          
+            return datos;
+        }
+
+        // Función para cargar una historia clínica existente
+        function cargarHistoriaClinica(id) {
+            const historiaRef = database.ref('historias_clinicas/' + id);
+            
+            return historiaRef.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    const datos = snapshot.val();
+                    console.log('Historia clínica cargada:', datos);
+                    return datos;
+                } else {
+                    throw new Error('Historia clínica no encontrada');
+                }
+            });
+        }
+
+        // Función para listar todas las historias clínicas
+        function listarHistoriasClinicas() {
+            const historiasRef = database.ref('historias_clinicas');
+            
+            return historiasRef.once('value').then((snapshot) => {
+                const historias = [];
+                snapshot.forEach((childSnapshot) => {
+                    const historia = childSnapshot.val();
+                    historias.push({
+                        id: childSnapshot.key,
+                        ...historia
+                    });
+                });
+                return historias;
+            });
+        }
+
+        // *** FUNCIONES DEL APGAR FAMILIAR ***
+        
+        function calcularAPGAR() {
+            const categorias = ['adaptacion', 'participacion', 'crecimiento', 'afecto', 'resolucion'];
+            let puntajeTotal = 0;
+            let respuestasCompletas = 0;
+
+            categorias.forEach(categoria => {
+                const respuesta = document.querySelector(`input[name="${categoria}"]:checked`);
+                if (respuesta) {
+                    puntajeTotal += parseInt(respuesta.value);
+                    respuestasCompletas++;
+                }
+            });
+
+            const puntajeTotalElement = document.getElementById('puntaje_total');
+            const apgarCalculadoElement = document.getElementById('apgar_familiar_calculado');
+            
+            if (puntajeTotalElement) puntajeTotalElement.textContent = puntajeTotal;
+            if (apgarCalculadoElement) apgarCalculadoElement.value = puntajeTotal;
+
+            const interpretacionDiv = document.getElementById('interpretacion');
+            
+            if (interpretacionDiv) {
+                if (respuestasCompletas === 5) {
+                    let interpretacion = '';
+                    let claseCSS = '';
+
+                    if (puntajeTotal >= 7) {
+                        interpretacion = '✅ Función familiar normal';
+                        claseCSS = 'normal';
+                    } else if (puntajeTotal >= 4) {
+                        interpretacion = '⚠️ Disfunción familiar leve';
+                        claseCSS = 'disfuncion-leve';
+                    } else if (puntajeTotal >= 1) {
+                        interpretacion = '🚨 Disfunción familiar moderada';
+                        claseCSS = 'disfuncion-moderada';
+                    } else {
+                        interpretacion = '🆘 Disfunción familiar severa';
+                        claseCSS = 'disfuncion-severa';
+                    }
+
+                    interpretacionDiv.textContent = interpretacion;
+                    interpretacionDiv.className = `interpretacion ${claseCSS}`;
+                } else {
+                    interpretacionDiv.textContent = `Faltan ${5 - respuestasCompletas} pregunta(s) por responder`;
+                    interpretacionDiv.className = 'interpretacion';
+                }
+            }
+
+            return {
+                puntaje: puntajeTotal,
+                respuestasCompletas: respuestasCompletas
+            };
+        }
+
+        function inicializarAPGAR() {
+            const radioButtons = document.querySelectorAll('input[name="adaptacion"], input[name="participacion"], input[name="crecimiento"], input[name="afecto"], input[name="resolucion"]');
+            
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', calcularAPGAR);
+            });
+
+            calcularAPGAR();
+        }
+
+        function obtenerResultadoAPGAR() {
+            const puntaje = parseInt(document.getElementById('apgar_familiar_calculado')?.value) || 0;
+            const comentarios = document.getElementById('comentarios_familia')?.value || '';
+            
+            let interpretacion = '';
+            let nivelFuncionalidad = '';
+            
+            if (puntaje >= 7) {
+                interpretacion = 'Función familiar normal';
+                nivelFuncionalidad = 'normal';
+            } else if (puntaje >= 4) {
+                interpretacion = 'Disfunción familiar leve';
+                nivelFuncionalidad = 'leve';
+            } else if (puntaje >= 1) {
+                interpretacion = 'Disfunción familiar moderada';
+                nivelFuncionalidad = 'moderada';
+            } else {
+                interpretacion = 'Disfunción familiar severa';
+                nivelFuncionalidad = 'severa';
+            }
+
+            const categorias = ['adaptacion', 'participacion', 'crecimiento', 'afecto', 'resolucion'];
+            const respuestas = {};
+            
+            categorias.forEach(categoria => {
+                const respuesta = document.querySelector(`input[name="${categoria}"]:checked`);
+                respuestas[categoria] = respuesta ? parseInt(respuesta.value) : null;
+            });
+
+            return {
+                puntaje: puntaje,
+                interpretacion: interpretacion,
+                nivel: nivelFuncionalidad,
+                comentarios: comentarios,
+                respuestas: respuestas,
+                esValido: puntaje >= 0 && puntaje <= 10,
+                fecha_evaluacion: new Date().toISOString()
+            };
+        }
+
+        function validarAPGARCompleto() {
+            const categorias = ['adaptacion', 'participacion', 'crecimiento', 'afecto', 'resolucion'];
+            let respuestasCompletas = 0;
+            
+            categorias.forEach(categoria => {
+                const respuesta = document.querySelector(`input[name="${categoria}"]:checked`);
+                if (respuesta) {
+                    respuestasCompletas++;
+                }
+            });
+            
+            return respuestasCompletas === 5;
+        }
+
+        // *** FUNCIONES DE DOMINIOS DE ENFERMERÍA ***
+        
+        function toggleAlteracion(dominioName) {
+            const radioAlterado = document.querySelector(`input[name="${dominioName}"][value="alterado"]`);
+            const textarea = document.querySelector(`textarea[name="${dominioName}_alteracion"]`);
+            
+            if (radioAlterado && radioAlterado.checked) {
+                textarea.classList.add('mostrar');
+                textarea.required = true;
+            } else {
+                textarea.classList.remove('mostrar');
+                textarea.required = false;
+                textarea.value = '';
+            }
+            
+            actualizarContador();
+        }
+
+        function actualizarContador() {
+            const dominios = [
+                'promocion_salud', 'nutricion', 'eliminacion', 'actividad_reposo',
+                'percepcion_cognicion', 'autopercepcion', 'rol_relaciones', 'sexualidad',
+                'afrontamiento_estres', 'principios_vitales', 'seguridad_proteccion',
+                'confort', 'crecimiento_desarrollo'
+            ];
+            
+            let alterados = 0;
+            
+            dominios.forEach(dominio => {
+                const radioAlterado = document.querySelector(`input[name="${dominio}"][value="alterado"]`);
+                if (radioAlterado && radioAlterado.checked) {
+                    alterados++;
+                }
+            });
+            
+            const contador = document.getElementById('contador-dominios');
+            if (contador) {
+                contador.textContent = `${alterados} de 13 dominios alterados`;
+                
+                const contenedor = contador.parentElement;
+                if (alterados === 0) {
+                    contenedor.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                } else if (alterados <= 3) {
+                    contenedor.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
+                } else {
+                    contenedor.style.background = 'linear-gradient(135deg, #dc3545 0%, #6f42c1 100%)';
+                }
+            }
+        }
+
+        function obtenerDatosDominios() {
+            const dominios = [
+                'promocion_salud', 'nutricion', 'eliminacion', 'actividad_reposo',
+                'percepcion_cognicion', 'autopercepcion', 'rol_relaciones', 'sexualidad',
+                'afrontamiento_estres', 'principios_vitales', 'seguridad_proteccion',
+                'confort', 'crecimiento_desarrollo'
+            ];
+            
+            const datosDominios = {};
+            let totalAlterados = 0;
+            
+            dominios.forEach(dominio => {
+                const radioSeleccionado = document.querySelector(`input[name="${dominio}"]:checked`);
+                const alteracion = document.querySelector(`textarea[name="${dominio}_alteracion"]`)?.value || '';
+                if (radioSeleccionado) {
+                    datosDominios[dominio] = {
+                        estado: radioSeleccionado.value,
+                        alteracion: radioSeleccionado.value === 'alterado' ? alteracion : null
+                    };
+                    
+                    if (radioSeleccionado.value === 'alterado') {
+                        totalAlterados++;
+                    }
+                }
+            });
+            
+            return {
+                dominios: datosDominios,
+                resumen: {
+                    total_dominios: 13,
+                    dominios_alterados: totalAlterados,
+                    dominios_normales: 13 - totalAlterados,
+                    porcentaje_alteracion: ((totalAlterados / 13) * 100).toFixed(1)
+                }
+            };
+        }
+
+        // *** FUNCIONES AUXILIARES ***
+        
+        // Cálculo automático de edad
+        function calcularEdad() {
+            const fechaNacimiento = new Date(document.getElementById('fecha_nacimiento').value);
+            const fechaReferencia = new Date();
+            const edad = Math.floor((fechaReferencia - fechaNacimiento) / (365.25 * 24 * 60 * 60 * 1000));
+            
+            if (edad >= 0 && edad <= 18) {
+                document.getElementById('edad').value = edad;
+            }
+        }
+
+        // Cálculo automático de IMC
+        function calcularIMC() {
+            const peso = parseFloat(document.getElementById('peso').value);
+            const talla = parseFloat(document.getElementById('talla').value);
+            
+            if (peso && talla) {
+                const imc = peso / Math.pow(talla / 100, 2);
+                document.getElementById('imc_edad').value = imc.toFixed(1);
+            }
+        }
+
+        // Event listener principal del formulario
+        document.getElementById('clinicalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = '⏳ Guardando en Firebase...';
+            submitBtn.disabled = true;
+            
+            // Recopilar datos del formulario
+            const datosFormulario = recopilarDatosFormulario();
+            
+            // Guardar en Firebase
+            guardarHistoriaClinica(datosFormulario)
+                .then(() => {
+                    submitBtn.textContent = '✅ Guardado en Firebase';
+                    submitBtn.style.background = '#4CAF50';
+                    submitBtn.style.color = 'white';
+                    
+                    alert('✅ Historia clínica guardada exitosamente en Firebase');
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'white';
+                        submitBtn.style.color = '#667eea';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    console.error('Error al guardar:', error);
+                    submitBtn.textContent = '❌ Error al guardar';
+                    submitBtn.style.background = '#f44336';
+                    submitBtn.style.color = 'white';
+                    
+                    alert('❌ Error al guardar en Firebase: ' + error.message);
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = 'white';
+                        submitBtn.style.color = '#667eea';
+                    }, 3000);
+                });
+        });
+
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listeners para cálculos automáticos
+            document.getElementById('fecha_nacimiento').addEventListener('change', calcularEdad);
+            document.getElementById('peso').addEventListener('input', calcularIMC);
+            document.getElementById('talla').addEventListener('input', calcularIMC);
+            
+            // Inicializar APGAR si existen los elementos
+            if (document.querySelector('input[name="adaptacion"]')) {
+                inicializarAPGAR();
+            }
+            
+            // Inicializar dominios si existen los elementos
+            const dominios = [
+                'promocion_salud', 'nutricion', 'eliminacion', 'actividad_reposo',
+                'percepcion_cognicion', 'autopercepcion', 'rol_relaciones', 'sexualidad',
+                'afrontamiento_estres', 'principios_vitales', 'seguridad_proteccion',
+                'confort', 'crecimiento_desarrollo'
+            ];
+
+            dominios.forEach(dominio => {
+                const radios = document.querySelectorAll(`input[name="${dominio}"]`);
+                radios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        toggleAlteracion(dominio);
+                    });
+                });
+            });
+
+            if (document.getElementById('contador-dominios')) {
+                actualizarContador();
+            }
+        });
+
+    </script>
+</body>
+</html>
+                
+                
